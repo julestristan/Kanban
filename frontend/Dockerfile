@@ -4,4 +4,6 @@ FROM nginx:alpine
 # On y copiera notre futur fichier index.html
 WORKDIR /usr/share/nginx/html
 
+COPY index.html .
+
 EXPOSE 80
