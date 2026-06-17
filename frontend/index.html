@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Kanban Trello</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #e0e2e5; padding: 20px; }
+        h1 { color: #172b4d; text-align: center; }
+        .board { display: flex; gap: 20px; justify-content: center; margin-top: 30px; }
+        .column { background: #f4f5f7; border-radius: 8px; width: 250px; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .column h3 { margin-top: 0; color: #5e6c84; font-size: 14px; text-transform: uppercase; }
+        .card { background: white; padding: 10px; border-radius: 4px; margin-bottom: 10px; box-shadow: 0 1px 0 rgba(9,30,66,0.25); color: #172b4d; }
+    </style>
+</head>
+<body>
+
+    <h1>📋 Mon Kanban Dockerisé</h1>
+    
+    <div class="board">
+        <div class="column">
+            <h3>(To Do)</h3>
+            <div id="todo-list"></div>
+        </div>
+        <div class="column">
+            <h3>(In Progress)</h3>
+            <div id="inprogress-list"></div>
+        </div>
+        <div class="column">
+            <h3>(Done)</h3>
+            <div id="done-list"></div>
+        </div>
+    </div>
+
+    <script>
+        // On va chercher les données sur le port de notre API Docker
+        fetch('http://localhost:8000/api/cards')
+            .then(response => response.json())
+            .then(cards => {
+                cards.forEach(card => {
+                    const cardEl = document.createElement('div');
+                    cardEl.className = 'card';
+                    cardEl.innerText = card.title;
+
+                    // On range la carte dans la bonne colonne selon son statut
+                    if (card.status === 'To Do') document.getElementById('todo-list').appendChild(cardEl);
+                    if (card.status === 'In Progress') document.getElementById('inprogress-list').appendChild(cardEl);
+                    if (card.status === 'Done') document.getElementById('done-list').appendChild(cardEl);
+                });
+            })
+            .catch(err => console.error("Erreur lors de la récupération des cartes:", err));
+    </script>
+</body>
+</html>
