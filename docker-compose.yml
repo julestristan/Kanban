@@ -1,0 +1,16 @@
+services:
+  # NodeJS API
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    container_name: kanban_backend
+
+  # Web Nginx
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80" # Port 80 Nginx : Port 3000 PC
+    container_name: kanban_frontend
+    depends_on:
+      - backend # Runs backend before frontend
