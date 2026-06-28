@@ -2,9 +2,13 @@ FROM node:20-alpine
 
 WORKDIR /usr/src/app
 
-# On crée un package.json à la volée et on installe les dépendances
-RUN npm init -y && npm install express cors
+# Étape A: On copie d'abord UNIQUEMENT les fichiers de dépendances
+COPY package*.json ./
 
+# Étape B: On installe les dépendances (Docker mettra cette étape en cache)
+RUN npm install --production
+
+# Étape C: On copie le reste du code (server.js)
 COPY server.js .
 
 EXPOSE 8000
